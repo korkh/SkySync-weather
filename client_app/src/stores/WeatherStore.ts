@@ -1,8 +1,13 @@
 import { makeAutoObservable } from "mobx";
-import { WeatherState } from "../interfaces/WeatherState";
 // import { transformWeatherData } from "../utils/transformWeatherDataUtil";
 import agent from "../api/agent";
+import { IWeatherData, IWeatherDataExtended } from "../interfaces/IWeatherData";
 
+export type WeatherState = {
+  weatherData: IWeatherData;
+  extendedWeatherData: IWeatherDataExtended[];
+  isError: boolean;
+};
 export default class WeatherStore {
   weatherState: WeatherState = {
     weatherData: {
