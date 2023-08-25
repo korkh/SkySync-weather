@@ -15,13 +15,11 @@ interface Props {
   description: string;
   icon: string;
   tempUnits: IUnits;
-  pop: number;
-  precMm: number | null;
   onClick: () => void;
   isExpanded: boolean;
 }
 
-const ForecastBoard = ({
+const ForecastBoardMobile = ({
   day,
   date,
   time,
@@ -30,10 +28,8 @@ const ForecastBoard = ({
   description,
   icon,
   tempUnits,
-  pop,
-  precMm,
-  onClick,
-  isExpanded
+  isExpanded,
+  onClick
 }: Props) => {
   const [metricUnits, setMetricUnits] = useState<IUnits | undefined>(undefined);
   useEffect(() => {
@@ -49,17 +45,13 @@ const ForecastBoard = ({
       <span style={{ display: "block" }}>
         <h6>{date}</h6>
         <h6 style={{ color: "grey" }}>{day}</h6>
-        <h6>{time}</h6>
+        <h6 style={{ color: "grey" }}>{time}</h6>
       </span>
       <div>
         <span>
           <WeatherIcon iconCode={icon} />
         </span>
         <p>{description}</p>
-        <span>
-          <p>Precip: {pop > 90 ? ">90" : pop}%</p>
-          <p>{precMm}</p>
-        </span>
         <span>
           <Icon name="thermometer half" size="large" />
           <Temperature value={high} units={metricUnits} />
@@ -71,4 +63,4 @@ const ForecastBoard = ({
   );
 };
 
-export default observer(ForecastBoard);
+export default observer(ForecastBoardMobile);

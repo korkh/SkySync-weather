@@ -14,7 +14,7 @@ const SwitchStyled = styled.label`
   bottom: 0;
   transition: 0.4s;
   border-radius: 55px;
-  background-color: teal;
+  background-color: #396bae;
   .on,
   .off {
     color: ${({ theme }) => theme.temperatureSwitch.textColor};

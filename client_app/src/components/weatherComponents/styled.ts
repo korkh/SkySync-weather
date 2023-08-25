@@ -9,14 +9,14 @@ export const WeatherContainer = styled.div`
   flex-direction: column;
 `;
 export const Title = styled.h6`
-  font-weight: 500;
-  font-size: 1.125rem;
+  font-weight: 400;
+  font-size: ${({ theme }) => theme.fontSize.big};
   color: ${({ theme }) => theme.titleColor};
 `;
 export const CurrentWeatherContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-evenly;
+  justify-content: space-between;
   @media (max-width: 768px) {
     justify-content: flex-start;
   }
@@ -49,7 +49,7 @@ export const CurrentWeatherStatus = styled.div`
     }
   }
   h6 {
-    font-size: 1.375rem;
+    font-size: ${({ theme }) => theme.fontSize.medium};
     text-align: left;
     color: #7b98b2;
   }
@@ -57,13 +57,26 @@ export const CurrentWeatherStatus = styled.div`
 export const CurrentWeatherInfo = styled.div`
   display: flex;
   flex-direction: column;
+  width: 20rem;
   margin: 2rem 1rem;
   margin-left: 2rem;
+
+  background: rgba(230, 255, 255, 0.3); /* Background color with opacity */
+  backdrop-filter: blur(10px); /* Frosted glass effect */
+  border: 1px solid rgba(0, 0, 0, 0.1); /* Very light visible border */
+  border-radius: 10px; /* Rounded corners */
+  padding: 1rem; /* Add padding for better spacing */
+
+  /* Additional styles for your content */
+  font-size: ${({ theme }) => theme.fontSize.medium};
+  color: ${({ theme }) => theme.titleColor};
 `;
 export const FeelsLike = styled.div`
   display: flex;
-  font-size: 1.25rem;
-  color: #4a6fa1;
+  font-weight: 600;
+  align-items: center;
+  font-size: ${({ theme }) => theme.fontSize.medium};
+  color: #7b98b2;
   span {
     color: inherit;
   }

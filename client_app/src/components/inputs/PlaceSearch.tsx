@@ -3,10 +3,10 @@ import { LocationButton, SearchElement, SearchResult } from "./styled";
 import useOutsideClick from "../../hooks/useOutsideClick";
 import SearchSuggestion from "../inputs/SearchSuggestions";
 import { toast } from "react-toastify";
-import { BiCurrentLocation, BiSearchAlt } from "react-icons/bi";
 import { useStore } from "../../store/store";
 import DebounceInput from "./DebounceInput";
 import { observer } from "mobx-react-lite";
+import { Icon } from "semantic-ui-react";
 const PlaceSearch = () => {
   const suggestionRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
@@ -62,7 +62,7 @@ const PlaceSearch = () => {
 
   return (
     <SearchElement>
-      <BiSearchAlt style={{ fontSize: 24 }} />
+      <Icon name="search" size="large" color="teal" />
       <DebounceInput
         value={inputValue}
         delay={300}
@@ -70,7 +70,7 @@ const PlaceSearch = () => {
         placeholder="Search for location here.."
       />
       <LocationButton onClick={getWeatherByPsn}>
-        <BiCurrentLocation style={{ fontSize: 24 }} />
+        <Icon name="crosshairs" size="large" color="teal" />
       </LocationButton>
       {showSuggestions && (
         <SearchResult ref={suggestionRef}>

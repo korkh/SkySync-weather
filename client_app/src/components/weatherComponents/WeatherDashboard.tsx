@@ -13,15 +13,13 @@ import {
 import { IUnits, kmToMile } from "../../utils/unitsConverter";
 import Temperature from "../weatherComponents/Temperature";
 import WeatherIcon from "../weatherComponents/WeatherIcon";
-import { FaTemperatureHigh, FaTemperatureLow, FaWind } from "react-icons/fa";
-import { TbGauge } from "react-icons/tb";
-import { WiHumidity } from "react-icons/wi";
 import Switch from "../buttons/Switch";
 import { observer } from "mobx-react-lite";
 import { useStore } from "../../store/store";
 import Forecast from "./forecasts/Forecast";
 import agent from "../../api/agent";
 import LoadingComponent from "../Loaders/LoadingComponent";
+import { Icon } from "semantic-ui-react";
 
 const WeatherDashboard: React.FC = () => {
   const [metricUnits, setMetricUnits] = useState<IUnits>(IUnits.FAHRENHEIT);
@@ -30,7 +28,6 @@ const WeatherDashboard: React.FC = () => {
     setMetricUnits((prevUnits) =>
       prevUnits === IUnits.FAHRENHEIT ? IUnits.CELSIUS : IUnits.FAHRENHEIT
     );
-    console.log(metricUnits);
   };
 
   const {
@@ -70,9 +67,15 @@ const WeatherDashboard: React.FC = () => {
             </div>
             <CurrentWeatherContainer>
               <CurrentWeatherStatus>
-                <h4>{mainWeatherData.name}</h4>
+                <h6>{mainWeatherData.name}</h6>
                 <div style={{ alignItems: "center" }}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                    }}
+                  >
                     <WeatherIcon
                       iconCode={mainWeatherData.weather[0].icon}
                       isBig
@@ -91,38 +94,41 @@ const WeatherDashboard: React.FC = () => {
                       justifyContent: "right",
                       marginRight: "1rem",
                     }}
-                  >
-                    <FeelsLike>
-                      <p>Feels like</p>
-                      <Temperature
-                        value={mainWeatherData.main.feels_like}
-                        units={metricUnits}
-                        size="small"
-                      />
-                    </FeelsLike>
-                  </div>
+                  ></div>
                 </div>
-                <h6>
-                  {mainWeatherData
-                    ? mainWeatherData.weather[0].description
-                    : mainWeatherData && mainWeatherData.weather[0].main
-                    ? mainWeatherData.weather[0].main
-                    : null}
-                </h6>
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  <h6>
+                    {mainWeatherData
+                      ? mainWeatherData.weather[0].description
+                      : mainWeatherData && mainWeatherData.weather[0].main
+                      ? mainWeatherData.weather[0].main
+                      : null}
+                  </h6>
+                  <FeelsLike>
+                    <div>Feels like</div>
+                    <Temperature
+                      value={mainWeatherData.main.feels_like}
+                      units={metricUnits}
+                      size="small"
+                    />
+                  </FeelsLike>
+                </div>
               </CurrentWeatherStatus>
               <CurrentWeatherInfo>
                 <HighLowContainer>
                   <WeatherDegree>
-                    <FaTemperatureHigh />
-                    <div>
-                      <Temperature
-                        value={mainWeatherData.main.temp_max}
-                        units={metricUnits}
-                      />
-                    </div>
-                  </WeatherDegree>
-                  <WeatherDegree>
-                    <FaTemperatureLow />
+                    <Icon name="thermometer half" size="large" />
+                    <Temperature
+                      value={mainWeatherData.main.temp_max}
+                      units={metricUnits}
+                    />
+                    <small>&#10247;</small>
                     <Temperature
                       value={mainWeatherData.main.temp_min}
                       units={metricUnits}
@@ -130,15 +136,16 @@ const WeatherDashboard: React.FC = () => {
                   </WeatherDegree>
                 </HighLowContainer>
                 <InfoRow>
-                  <div>
-                    <WiHumidity /> Humidity
-                  </div>
+                  <span>
+                    <Icon name="tint" size="large" /> Humidity
+                  </span>
                   <span>{mainWeatherData.main.humidity}%</span>
                 </InfoRow>
                 <InfoRow>
-                  <div>
-                    <FaWind /> Wind / Gust
-                  </div>
+                  <span>
+                    <Icon name="exchange" size="large" />
+                    <span>Wind / Gust</span>
+                  </span>
                   <span>
                     {metricUnits
                       ? `${mainWeatherData.wind.speed} / ${mainWeatherData.wind.gust}`
@@ -147,9 +154,10 @@ const WeatherDashboard: React.FC = () => {
                   </span>
                 </InfoRow>
                 <InfoRow>
-                  <div>
-                    <TbGauge /> Pressure
-                  </div>
+                  <span>
+                    <Icon name="dashboard" size="large" />
+                    Pressure
+                  </span>
                   <span>{mainWeatherData.main.pressure}hPa</span>
                 </InfoRow>
               </CurrentWeatherInfo>

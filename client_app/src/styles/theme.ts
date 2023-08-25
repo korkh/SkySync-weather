@@ -1,7 +1,7 @@
 import { ITheme } from "../interfaces/ITheme";
 
 export const mainTheme: ITheme = {
-  titleColor: "#2F5D8A",
+  titleColor: "#727E8E",
   backgroundGradient: {
     color1: "#F9FFFF",
     color2: "#38C8E6",
@@ -25,4 +25,12 @@ export const mainTheme: ITheme = {
   },
   smallIconColor: "#A1B9CE",
   smallIconTextColor: "#7B98B2",
+  fontSize: {
+    tiny: "0.8rem",
+    small: "1rem",
+    medium: "1.3rem",
+    large: "1.6rem",
+    big: "2rem",
+    huge: "3rem",
+  },
 };

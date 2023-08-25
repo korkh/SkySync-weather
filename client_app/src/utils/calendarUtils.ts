@@ -1,7 +1,22 @@
-export const getWeekDays = (items: number): string[] => {
-  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-  const todayIndex = new Date().getDay();
-  return Array.from({ length: items }, (_, i) => days[(todayIndex + i) % 7]);
+export const getWeekDay = (dateStr: string) => {
+  const date = new Date(dateStr);
+  const daysOfWeek = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  return daysOfWeek[date.getDay()];
 };
 
-// calculating the index of the day in the days array, wrapping around to the beginning of the array if needed.
+export const getCustomTime = (date: string) => {
+  return date.split(" ")[1].substring(0, 5);
+};
+
+export const getCustomDate = (date: string) => {
+  return new Date(date).getDate().toString();
+};

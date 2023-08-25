@@ -24,4 +24,12 @@ export interface ITheme {
   };
   smallIconColor: string;
   smallIconTextColor: string;
+  fontSize: {
+    tiny: string;
+    small: string;
+    medium: string;
+    large: string;
+    big: string;
+    huge: string;
+  };
 }

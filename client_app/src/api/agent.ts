@@ -1,7 +1,11 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
-import { getWeekDays } from "../utils/calendarUtils";
+import {
+  getCustomDate,
+  getCustomTime,
+  getWeekDay,
+} from "../utils/calendarUtils";
 import { DailyWeatherData } from "../interfaces/DailyWeatherData";
 
 const sleep = (delay: number) => {
@@ -113,8 +117,7 @@ const Weather = {
       const response: AxiosResponse = await ax.get(
         `${mainURL}/weather?q=${place}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
       );
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      console.log(response.data);
+      // await new Promise((resolve) => setTimeout(resolve, 1000));
       return response.data;
     } catch (error) {
       console.error("Error fetching weather by place: ", error);
@@ -201,9 +204,8 @@ const Services = {
     localStorage.clear();
   },
   dataTransformation: (data: any): DailyWeatherData[] => {
-    console.log("Forecast data in agent", data);
     const forecast: DailyWeatherData[] = [];
-    const week = getWeekDays(data.list.length);
+    // const week = getWeekDays(data.list.length);
 
     if (!data || !data.list || !Array.isArray(data.list)) {
       return forecast;
@@ -211,8 +213,9 @@ const Services = {
 
     data.list.forEach((item: any, i: number) => {
       forecast.push({
-        day: week[i],
-        date: new Date(item.dt_txt).getDate().toString(),
+        day: getWeekDay(item.dt_txt),
+        date: getCustomDate(item.dt_txt),
+        time: getCustomTime(item.dt_txt),
         temp: {
           temp_max: item.main.temp_max,
           temp_min: item.main.temp_min,
@@ -222,10 +225,12 @@ const Services = {
           description: item.weather[0].description,
           icon: item.weather[0].icon,
         },
+        pop: Math.round(item.pop * 100),
+        rain: {
+          precMm: item.rain?.["3h"],
+        },
       });
     });
-
-    console.log("forecast in agent", forecast);
     return forecast;
   },
 };
