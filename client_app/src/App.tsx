@@ -1,23 +1,18 @@
 import { ThemeProvider } from "styled-components";
 import Home from "./pages/Home";
-import { darkTheme, lightTheme } from "./styles/theme";
-import { useStore } from "./stores/store";
-import GlobalStyles from "./styles/global";
+import { mainTheme } from "./styles/theme";
+import { GlobalStyles } from "./styles/global";
 import { ToastContainer } from "react-toastify";
+import { observer } from "mobx-react-lite";
 
 function App() {
-  const {
-    appStore: { globalState },
-  } = useStore();
-  const { darkMode } = globalState;
-
   return (
-    <ThemeProvider theme={darkMode ? darkTheme : lightTheme}>
-      <GlobalStyles />
+    <ThemeProvider theme={mainTheme}>
       <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
+      <GlobalStyles />
       <Home />
     </ThemeProvider>
   );
 }
 
-export default App;
+export default observer(App);

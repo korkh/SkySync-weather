@@ -1,6 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 
-export default createGlobalStyle`
+import { ITheme } from "../interfaces/ITheme";
+
+declare module "styled-components" {
+  export interface DefaultTheme extends ITheme {}
+}
+
+export const GlobalStyles = createGlobalStyle`
   * {
     margin: 0;
     padding: 0;

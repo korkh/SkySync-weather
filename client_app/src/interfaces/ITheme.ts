@@ -1,59 +1,27 @@
-import FlattenSimpleInterpolation from "styled-components";
-
-export enum ThemeEnum {
-  light = "light",
-  dark = "dark",
-}
-
 export interface ITheme {
-  colors: {
-    primary: string;
-    primaryDark: string;
-    primaryLight: string;
-    secondary: string;
-    secondaryDark: string;
-    secondaryLight: string;
-    success: string;
-    successDark: string;
-    successLight: string;
-    danger: string;
-    dangerDark: string;
-    dangerLight: string;
-
-    error: string;
-    overlay: string;
-
-    white: string;
-    black: string;
-
-    bg: string;
-    font: string;
+  titleColor: string;
+  backgroundImage?: any;
+  backgroundGradient: {
+    color1: string;
+    color2: string;
   };
-
-  media: {
-    extraLarge: string;
-    large: string;
-    medium: string;
-    small: string;
+  container_BgColor: string;
+  container_TitleColor: string;
+  forecastPanelBgColor: string;
+  searchInput: {
+    color: string;
+    placeholderColor: string;
   };
-
-  sizes: {
-    header: { height: number };
-    container: { width: number };
-    footer: { height: number };
-    modal: { width: number };
+  temperatureSwitch: {
+    backgroundColor: string;
+    sliderColor: string;
+    textColor: string;
   };
-
-  durations: {
-    ms300: number;
+  searchSuggestion: {
+    backgroundColor: string;
+    hoverBackgroundColor: string;
+    seperatorLineColor: string;
   };
-
-  order: {
-    header: number;
-    modal: number;
-  };
+  smallIconColor: string;
+  smallIconTextColor: string;
 }
-
-export type StyledVariants<E extends string | number> = {
-  [key in E]?: typeof FlattenSimpleInterpolation;
-};

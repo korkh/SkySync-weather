@@ -1,4 +1,5 @@
-import React from "react";
+import { observer } from "mobx-react-lite";
+import { useState } from "react";
 import styled from "styled-components";
 
 const SwitchStyled = styled.label`
@@ -13,7 +14,7 @@ const SwitchStyled = styled.label`
   bottom: 0;
   transition: 0.4s;
   border-radius: 55px;
-  background-color: ${({ theme }) => theme.temperatureSwitch.backgroundColor};
+  background-color: teal;
   .on,
   .off {
     color: ${({ theme }) => theme.temperatureSwitch.textColor};
@@ -43,7 +44,6 @@ const Slider = styled.div`
   left: 2px;
   top: 2px;
   background-color: ${({ theme }) => theme.temperatureSwitch.sliderColor};
-  -webkit-transition: 0.4s;
   transition: 0.4s;
   border-radius: 44px;
 `;
@@ -53,7 +53,7 @@ interface Props {
 }
 
 const Switch = ({ onClick }: Props) => {
-  const [toggled, setToggled] = React.useState(false);
+  const [toggled, setToggled] = useState(false);
 
   return (
     <SwitchStyled
@@ -62,8 +62,8 @@ const Switch = ({ onClick }: Props) => {
         onClick();
       }}
     >
-      {toggled && <span className="on">C</span>}
-      {!toggled && <span className="off">F</span>}
+      {toggled && <span className="on">F</span>}
+      {!toggled && <span className="off">C</span>}
       <Slider
         style={{
           transform: toggled ? " translateX(28px)" : " translateX(0px)",
@@ -73,4 +73,4 @@ const Switch = ({ onClick }: Props) => {
   );
 };
 
-export default Switch;
+export default observer(Switch);

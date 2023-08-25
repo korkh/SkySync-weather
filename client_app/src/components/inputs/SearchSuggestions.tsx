@@ -1,6 +1,5 @@
-import { observer } from "mobx-react-lite";
-import { useStore } from "../../stores/store";
 import { SuggestionItem } from "./styled";
+import agent from "../../api/agent";
 
 interface Props {
   label: string;
@@ -8,16 +7,13 @@ interface Props {
 }
 
 const SearchSuggestion = ({ label, hide }: Props) => {
-  const {
-    weatherStore: { fetchWeatherData },
-  } = useStore();
   function handleOnClick() {
-    fetchWeatherData(label.split(",")[0]);
+    agent.Weather.getByPlace(label.split(",")[0]);
     setTimeout(() => {
       hide();
-    }, 500);
+    }, 400);
   }
   return <SuggestionItem onClick={handleOnClick}>{label}</SuggestionItem>;
 };
 
-export default observer(SearchSuggestion);
+export default SearchSuggestion;

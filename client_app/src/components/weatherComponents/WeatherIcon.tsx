@@ -1,61 +1,22 @@
-import { getWeatherFromCode } from "../../utils/weatherCodes";
-import { ReactComponent as CloudyIcon } from "../../assets/weatherStates/cloudy.svg";
-import { ReactComponent as FogIcon } from "../../assets/weatherStates/fog.svg";
-import { ReactComponent as HeavyRainIcon } from "../../assets/weatherStates/heavyRain.svg";
-import { ReactComponent as PartlyCloudyIcon } from "../../assets/weatherStates/partlyCloudy.svg";
-import { ReactComponent as RainIcon } from "../../assets/weatherStates/rain.svg";
-import { ReactComponent as SleetIcon } from "../../assets/weatherStates/sleet.svg";
-import { ReactComponent as SnowIcon } from "../../assets/weatherStates/snow.svg";
-import { ReactComponent as ClearSkyIcon } from "../../assets/weatherStates/clear.svg";
-import { ReactComponent as ThunderstormIcon } from "../../assets/weatherStates/thunderstorm.svg";
-import { ReactComponent as DrizzleIcon } from "../../assets/weatherStates/drizzle.svg";
+import React from "react";
 
 interface Props {
-  code: number;
+  iconCode: string;
   isBig?: boolean;
 }
-const WeatherIcon = ({ code, isBig }: Props) => {
-  let Icon: React.FunctionComponent<React.SVGProps<SVGSVGElement>>;
-  const weatherCondition = getWeatherFromCode(code);
-  switch (weatherCondition) {
-    case "Clear":
-      Icon = ClearSkyIcon;
-      break;
-    case "Partly cloudy":
-      Icon = PartlyCloudyIcon;
-      break;
-    case "Cloudy":
-      Icon = CloudyIcon;
-      break;
-    case "Rain":
-      Icon = RainIcon;
-      break;
-    case "Heavy rain":
-      Icon = HeavyRainIcon;
-      break;
-    case "Drizzle":
-      Icon = DrizzleIcon;
-      break;
-    case "Thunderstorm":
-      Icon = ThunderstormIcon;
-      break;
-    case "Snow":
-      Icon = SnowIcon;
-      break;
-    case "Sleet":
-      Icon = SleetIcon;
-      break;
-    case "Fog":
-      Icon = FogIcon;
-      break;
-    default:
-      Icon = ClearSkyIcon;
-  }
+
+const WeatherIcon = ({ iconCode, isBig }: Props) => {
+  const baseURL = process.env.REACT_APP_ICON_URL;
+  const imageUrl = `${baseURL}/${iconCode}@2x.png`;
 
   return isBig ? (
-    <Icon style={{ width: "100px", height: "100px" }} />
+    <img
+      src={imageUrl}
+      alt={iconCode}
+      style={{ width: "150px", height: "150px" }}
+    />
   ) : (
-    <Icon />
+    <img src={imageUrl} alt={iconCode} />
   );
 };
 

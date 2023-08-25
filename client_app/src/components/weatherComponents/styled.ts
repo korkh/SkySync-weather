@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const WeatherContainer = styled.div`
-  background-color: ${({ theme }) => theme.panelBgColor};
+  background-color: ${({ theme }) => theme.container_BgColor};
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
   padding: 1.5rem 2rem;
@@ -11,11 +11,12 @@ export const WeatherContainer = styled.div`
 export const Title = styled.h6`
   font-weight: 500;
   font-size: 1.125rem;
-  color: ${({ theme }) => theme.panelTitleColor};
+  color: ${({ theme }) => theme.titleColor};
 `;
 export const CurrentWeatherContainer = styled.div`
   display: flex;
   flex-wrap: wrap;
+  justify-content: space-evenly;
   @media (max-width: 768px) {
     justify-content: flex-start;
   }
@@ -37,9 +38,10 @@ export const CurrentWeatherStatus = styled.div`
     margin-bottom: 2rem;
   }
   span {
+    display: flex;
     font-weight: 200;
-    font-size: 7rem;
-    color: #4a6fa1;
+    font-size: 6rem;
+    color: red;
     margin-left: 1.5rem;
     line-height: 1;
     sup {
@@ -58,9 +60,13 @@ export const CurrentWeatherInfo = styled.div`
   margin: 2rem 1rem;
   margin-left: 2rem;
 `;
-export const FeelsLike = styled.p`
+export const FeelsLike = styled.div`
+  display: flex;
   font-size: 1.25rem;
   color: #4a6fa1;
+  span {
+    color: inherit;
+  }
 `;
 export const HighLowContainer = styled.div`
   display: flex;
@@ -83,7 +89,7 @@ export const WeatherDegree = styled.div`
 export const InfoRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: space-between;
   margin-bottom: 0.8rem;
   div {
     color: ${({ theme }) => theme.smallIconTextColor};

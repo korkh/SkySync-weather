@@ -1,37 +1,39 @@
 import React, { useState, useEffect } from "react";
 import { SearchInput } from "./styled";
+import { observer } from "mobx-react-lite";
 
 interface Props {
   onChange: (value: string) => void;
   delay: number;
   placeholder: string;
+  value: string;
 }
 
-const DebounceInput = ({ onChange, delay, placeholder }: Props) => {
-  const [value, setValue] = useState<string>("");
+const DebounceInput = ({ value, onChange, delay, placeholder }: Props) => {
+  const [internalValue, setInternalValue] = useState<string>(value);
 
   useEffect(() => {
     const timer = setTimeout(() => {
-      onChange(value);
+      onChange(internalValue);
     }, delay);
 
     return () => {
       clearTimeout(timer);
     };
-  }, [value, onChange, delay]);
+  }, [internalValue, onChange, delay]);
 
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(event.currentTarget.value);
+    setInternalValue(event.target.value);
   };
 
   return (
     <SearchInput
       type="text"
-      value={value}
+      value={internalValue}
       onChange={handleInputChange}
       placeholder={placeholder}
     />
   );
 };
 
-export default DebounceInput;
+export default observer(DebounceInput);
