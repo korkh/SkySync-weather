@@ -15,7 +15,9 @@ interface Props {
   description: string;
   icon: string;
   tempUnits: IUnits;
-  onClick: () => void;
+  pop?: number;
+  precMm?: number | null;
+  onClick?: () => void;
   isExpanded: boolean;
 }
 
@@ -28,8 +30,8 @@ const ForecastBoardMobile = ({
   description,
   icon,
   tempUnits,
+  onClick,
   isExpanded,
-  onClick
 }: Props) => {
   const [metricUnits, setMetricUnits] = useState<IUnits | undefined>(undefined);
   useEffect(() => {
@@ -41,25 +43,29 @@ const ForecastBoardMobile = ({
   }, [tempUnits]);
 
   return (
-    <ForecastItemContainer onClick={onClick}>
-      <span style={{ display: "block" }}>
-        <h6>{date}</h6>
-        <h6 style={{ color: "grey" }}>{day}</h6>
-        <h6 style={{ color: "grey" }}>{time}</h6>
-      </span>
-      <div>
-        <span>
-          <WeatherIcon iconCode={icon} />
-        </span>
-        <p>{description}</p>
-        <span>
-          <Icon name="thermometer half" size="large" />
-          <Temperature value={high} units={metricUnits} />
-          <small>&#10247;</small>
-          <Temperature value={low} units={metricUnits} />
-        </span>
-      </div>
-    </ForecastItemContainer>
+    <>
+      {isExpanded && (
+        <ForecastItemContainer onClick={onClick}>
+          <span>
+            <h6 style={{ color: "grey" }}>{time}</h6>
+          </span>
+          <div>
+            <WeatherIcon
+              iconCode={icon}
+              style={{ filter: "brightness(0.6)" }}
+              size="tinyL"
+            />
+            <p>{description}</p>
+            <span>
+              <Icon name="thermometer half" size="large" />
+              <Temperature value={high} units={metricUnits} />
+              <small>&#10247;</small>
+              <Temperature value={low} units={metricUnits} />
+            </span>
+          </div>
+        </ForecastItemContainer>
+      )}
+    </>
   );
 };
 

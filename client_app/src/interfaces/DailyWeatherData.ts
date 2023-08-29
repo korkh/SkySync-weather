@@ -1,7 +1,9 @@
 export type DailyWeatherData = {
-  day: string;
-  date: string;
-  time: string;
+  weekDay: string;
+  day: number;
+  month: string;
+  year: number;
+  time?: string;
   temp: {
     temp_min: number;
     temp_max: number;

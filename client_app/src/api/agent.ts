@@ -1,12 +1,8 @@
 import axios, { AxiosError, AxiosInstance, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { router } from "../router/Routes";
-import {
-  getCustomDate,
-  getCustomTime,
-  getWeekDay,
-} from "../utils/calendarUtils";
 import { DailyWeatherData } from "../interfaces/DailyWeatherData";
+import { CurrentDate } from "../interfaces/CurrentDate";
 
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
@@ -98,7 +94,9 @@ const Locations = {
 const Weather = {
   getByPosition: async () => {
     try {
+      agent.Services.clearStore(); //if want to refresh
       const psn: { lat: number; lon: number } = await Locations.getPosition();
+
       Services.setLocationToStore(psn);
       const response: AxiosResponse = await ax.get(
         `${mainURL}/weather?lat=${psn.lat}&lon=${psn.lon}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
@@ -113,11 +111,12 @@ const Weather = {
   },
   getByPlace: async (place: string) => {
     try {
+      agent.Services.clearStore(); //if choosing other location
       Services.setLocationToStore(place);
       const response: AxiosResponse = await ax.get(
         `${mainURL}/weather?q=${place}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
       );
-      // await new Promise((resolve) => setTimeout(resolve, 1000));
+      Services.setWeather(response.data);
       return response.data;
     } catch (error) {
       console.error("Error fetching weather by place: ", error);
@@ -130,7 +129,10 @@ const Weather = {
 const DailyWeather = {
   getByPosition: async () => {
     try {
+      agent.Services.clearStore(); //if want to refresh
       const psn: { lat: number; lon: number } = await Locations.getPosition();
+
+      Services.setLocationToStore(psn);
       const response: AxiosResponse = await ax.get(
         `${mainURL}/forecast?lat=${psn.lat}&lon=${psn.lon}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`
       );
@@ -195,6 +197,19 @@ const Services = {
       localStorage.setItem("location", storedData);
     }
   },
+  setCurrentDateToStore: (data: CurrentDate) => {
+    if (localStorage.getItem("currentDate") === null || "") {
+      let storedData = JSON.stringify(data);
+      localStorage.setItem("currentDate", storedData);
+    }
+  },
+  getCurrentDateFromStore: (key: string): any => {
+    let storedData = localStorage.getItem("currentDate");
+    if (storedData) {
+      return JSON.parse(storedData);
+    }
+    return null;
+  },
   removeItemFromStore: (item?: string | null) => {
     if (typeof item === "string") {
       localStorage.removeItem(item);
@@ -211,11 +226,15 @@ const Services = {
       return forecast;
     }
 
-    data.list.forEach((item: any, i: number) => {
+    data.list.forEach((item: any) => {
+      const date = Services.getDate(item.dt);
+
       forecast.push({
-        day: getWeekDay(item.dt_txt),
-        date: getCustomDate(item.dt_txt),
-        time: getCustomTime(item.dt_txt),
+        weekDay: date.weekDay,
+        day: date.day,
+        year: date.year,
+        month: date.month,
+        time: date.time,
         temp: {
           temp_max: item.main.temp_max,
           temp_min: item.main.temp_min,
@@ -232,6 +251,41 @@ const Services = {
       });
     });
     return forecast;
+  },
+  getDate: (data: number) => {
+    // Convert UNIX timestamp to milliseconds
+    const timestampInMillis = data * 1000;
+
+    // Create a new Date object using the converted timestamp
+    const dateObject = new Date(timestampInMillis);
+
+    // Extracting date, week day, month, year, and time from the Date object
+    const day = dateObject.getDate();
+    const weekDay = dateObject
+      .toLocaleDateString("en-US", { weekday: "short" })
+      .toUpperCase();
+
+    const month = dateObject
+      .toLocaleDateString("en-US", { month: "short" })
+      .toUpperCase();
+    const year = dateObject.getFullYear();
+
+    const time = dateObject.toLocaleTimeString("en-US", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false,
+    });
+
+    const currentDate = {
+      day: day,
+      weekDay: weekDay,
+      month: month,
+      year: year,
+      time: time,
+    };
+
+    Services.setCurrentDateToStore(currentDate);
+    return currentDate;
   },
 };
 

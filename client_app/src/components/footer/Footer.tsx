@@ -1,22 +1,14 @@
-import styled from "styled-components";
-
-export const Container = styled.footer`
-  p {
-    padding: 1rem 0;
-    font-size: 1rem;
-    text-align: center;
-    color: #165d7b;
-    span {
-      color: #072e3d;
-    }
-  }
-`;
+import { Container, GithubLink } from "./styled";
+import { FaGithub } from "react-icons/fa";
 
 const Footer: React.FC = () => {
   return (
     <Container>
       <p>
         Developed By <span>Aleksander Korkh</span>
+        <GithubLink href="https://github.com/korkh/SkySync-Weather">
+          <FaGithub style={{ fontSize: 24 }} />
+        </GithubLink>
       </p>
     </Container>
   );

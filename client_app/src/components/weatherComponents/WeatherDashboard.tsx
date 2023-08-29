@@ -32,35 +32,56 @@ const WeatherDashboard: React.FC = () => {
 
   const {
     weatherStore: {
-      weatherState: { weatherData, weatherDaily },
+      currentDate,
+      getCurrentDate,
       isLoading,
+      weatherState: { weatherData, weatherDaily },
     },
   }: any = useStore();
 
   const [mainWeatherData, setMainWeatherData] = useState(weatherData);
   const [dailyWeatherData, setDailyWeatherData] = useState(weatherDaily);
+  const [activeDate, setActiveDate] = useState<any>(currentDate);
 
   //persisting data throug localStorage
   useEffect(() => {
     if (
       agent.Services.getWeather() !== null &&
-      agent.Services.getDailyWeather() !== null
+      agent.Services.getDailyWeather() !== null &&
+      agent.Services.getCurrentDateFromStore("currentDate") !== null
     ) {
       setMainWeatherData(agent.Services.getWeather());
       setDailyWeatherData(agent.Services.getDailyWeather());
+      setActiveDate(agent.Services.getCurrentDateFromStore("currentDate"));
     } else {
       setMainWeatherData(weatherData);
       setDailyWeatherData(weatherDaily);
+      if (!mainWeatherData.dt) return;
+      const currentDateObj = getCurrentDate(mainWeatherData.dt);
+      setActiveDate(currentDateObj);
     }
-  }, [weatherDaily, weatherData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [weatherDaily, weatherData, currentDate]);
 
   return (
     <>
-      {mainWeatherData.cod === 200 ? (
+      {mainWeatherData.cod === 200 && dailyWeatherData.cod === "200" ? (
         <>
           <WeatherContainer>
             <div style={{ display: "flex", justifyContent: "space-between" }}>
-              <Title>Current Weather</Title>
+              <Title>
+                Current Weather
+                <p
+                  style={{
+                    fontSize: "1rem",
+                    color: "#3a86ca",
+                    fontWeight: 600,
+                    marginTop: "0.5rem",
+                  }}
+                >
+                  {activeDate?.weekDay}, {activeDate?.day} {activeDate?.year}
+                </p>
+              </Title>
               <div>
                 <Switch onClick={() => handleUnits()} />
               </div>
@@ -78,7 +99,8 @@ const WeatherDashboard: React.FC = () => {
                   >
                     <WeatherIcon
                       iconCode={mainWeatherData.weather[0].icon}
-                      isBig
+                      style={{ filter: "brightness(0.7)" }}
+                      size="small"
                     />
                     <span>
                       <Temperature
@@ -88,13 +110,6 @@ const WeatherDashboard: React.FC = () => {
                       />
                     </span>
                   </div>
-                  <div
-                    style={{
-                      display: "flex",
-                      justifyContent: "right",
-                      marginRight: "1rem",
-                    }}
-                  ></div>
                 </div>
                 <div
                   style={{
@@ -127,11 +142,14 @@ const WeatherDashboard: React.FC = () => {
                     <Temperature
                       value={mainWeatherData.main.temp_max}
                       units={metricUnits}
+                      color="red"
+                      size="tinyL"
                     />
                     <small>&#10247;</small>
                     <Temperature
                       value={mainWeatherData.main.temp_min}
                       units={metricUnits}
+                      size="tinyL"
                     />
                   </WeatherDegree>
                 </HighLowContainer>

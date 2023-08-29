@@ -2,6 +2,8 @@ import styled from "styled-components";
 
 export const SearchElement = styled.div`
   position: relative;
+  width: 40vw;
+  min-width: 40vw;
   height: 3.25rem;
   border-radius: 26px;
   background: ${({ theme }) => theme.container_BgColor};
@@ -11,6 +13,9 @@ export const SearchElement = styled.div`
   display: flex;
   align-items: center;
   z-index: 1;
+  @media (max-width: 768px) {
+    width: 92vw;
+  }
 `;
 export const SearchInput = styled.input`
   flex: 1;
@@ -35,7 +40,27 @@ export const LocationButton = styled.button`
   background-color: transparent;
   height: 100%;
   display: contents;
-  &:hover svg {
+  position: relative;
+  /* Tooltip */
+  &::before {
+    content: "Get Weather for Current Location"; /* Tooltip text */
+    position: absolute;
+    bottom: 80%; /*?? Position above the button */
+    right: 5%;
+    /* transform: translateX(-50%); */
+    background-color: teal;
+    color: white;
+    padding: 5px;
+    border-radius: 5px;
+    font-size: 1rem;
+    opacity: 0; /* Initially hidden */
+    visibility: hidden; /* Initially hidden */
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  &:hover::before {
+    opacity: 1; /* Show tooltip on hover */
+    visibility: visible; /* Show tooltip on hover */
   }
 `;
 

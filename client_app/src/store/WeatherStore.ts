@@ -1,11 +1,13 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
+import { CurrentDate } from "../interfaces/CurrentDate";
 
 export type WeatherState = {
   weatherData: [];
   weatherDaily: [];
   location: string | { lat: number; lon: number };
   isError: boolean;
+  currentDate: CurrentDate;
 };
 export default class WeatherStore {
   weatherState: WeatherState = {
@@ -13,6 +15,13 @@ export default class WeatherStore {
     weatherDaily: [],
     isError: false,
     location: "",
+    currentDate: {
+      day: 0,
+      weekDay: "",
+      year: 0,
+      month: "",
+      time: "",
+    },
   };
   isLoading = false;
 
@@ -141,5 +150,42 @@ export default class WeatherStore {
         this.setIsLoading(false);
       });
     }
+  };
+
+  getCurrentDate = (date: number) => {
+    this.setIsLoading(true);
+    try {
+      const currentDateObj = agent.Services.getDate(date);
+      console.log("current date object in store", currentDateObj);
+      runInAction(() => {
+        this.weatherState.currentDate = currentDateObj;
+        this.setIsLoading(false);
+      });
+      return currentDateObj;
+    } catch (error) {
+      runInAction(() => {
+        console.log(error);
+        this.weatherState.isError = true;
+        this.setIsLoading(false);
+      });
+    }
+  };
+
+  clearStore = () => {
+    agent.Services.clearStore();
+    runInAction(() => {
+      this.weatherState = {
+        weatherData: [],
+        weatherDaily: [],
+        isError: false,
+        location: "",
+        currentDate: {
+          day: 0,
+          weekDay: "",
+          year: 0,
+        },
+      };
+      this.isLoading = false;
+    });
   };
 }

@@ -1,14 +1,6 @@
 export const getWeekDay = (dateStr: string) => {
   const date = new Date(dateStr);
-  const daysOfWeek = [
-    "Sunday",
-    "Monday",
-    "Tuesday",
-    "Wednesday",
-    "Thursday",
-    "Friday",
-    "Saturday",
-  ];
+  const daysOfWeek = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
 
   return daysOfWeek[date.getDay()];
 };

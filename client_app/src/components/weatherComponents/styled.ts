@@ -4,7 +4,7 @@ export const WeatherContainer = styled.div`
   background-color: ${({ theme }) => theme.container_BgColor};
   box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.1);
   border-radius: 15px;
-  padding: 1.5rem 2rem;
+  padding: 0.5rem 2rem;
   display: flex;
   flex-direction: column;
 `;
@@ -18,7 +18,7 @@ export const CurrentWeatherContainer = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
   @media (max-width: 768px) {
-    justify-content: flex-start;
+    justify-content: center;
   }
 `;
 export const CurrentWeatherStatus = styled.div`
@@ -54,6 +54,7 @@ export const CurrentWeatherStatus = styled.div`
     color: #7b98b2;
   }
 `;
+
 export const CurrentWeatherInfo = styled.div`
   display: flex;
   flex-direction: column;
@@ -67,7 +68,6 @@ export const CurrentWeatherInfo = styled.div`
   border-radius: 10px; /* Rounded corners */
   padding: 1rem; /* Add padding for better spacing */
 
-  /* Additional styles for your content */
   font-size: ${({ theme }) => theme.fontSize.medium};
   color: ${({ theme }) => theme.titleColor};
 `;
@@ -83,7 +83,7 @@ export const FeelsLike = styled.div`
 `;
 export const HighLowContainer = styled.div`
   display: flex;
-  margin-bottom: 2rem;
+  margin-bottom: 0.8rem;
   width: 2rem;
 `;
 export const WeatherDegree = styled.div`

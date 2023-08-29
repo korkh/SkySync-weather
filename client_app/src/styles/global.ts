@@ -1,5 +1,4 @@
 import { createGlobalStyle } from "styled-components";
-
 import { ITheme } from "../interfaces/ITheme";
 
 declare module "styled-components" {
@@ -25,8 +24,18 @@ export const GlobalStyles = createGlobalStyle`
     display: flex;
     justify-content: center;
     min-height: 100vh;
-    background: whitesmoke;
-    background-size: auto;
+    background: url(${require("../assets/skyBg.jpg")}) no-repeat center center fixed;
+    background-size: cover;
+  }
+  body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(230, 230, 255, 0.5);
+    z-index: -1;
   }
 
   a {

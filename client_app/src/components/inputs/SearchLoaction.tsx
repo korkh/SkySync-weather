@@ -10,7 +10,7 @@ const SearchLoaction = () => {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const {
-    weatherStore: { fetchWeatherByPlace, getWeatherByPosition, getPlace },
+    weatherStore: { fetchWeatherByPlace, getPlace },
   } = useStore();
 
   const handleInputChange = async (value: string) => {
@@ -31,7 +31,6 @@ const SearchLoaction = () => {
   const handleSelectSuggestion = async (selectedSuggestion: string) => {
     // Fetch weather data using selectedSuggestion and OpenWeatherMap API
     // Display weather data or trigger weather component activation here
-    console.log("Selected suggestion:", selectedSuggestion);
 
     try {
       const weatherResp = await fetchWeatherByPlace(selectedSuggestion);

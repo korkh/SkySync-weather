@@ -6,7 +6,7 @@ export const mainTheme: ITheme = {
     color1: "#F9FFFF",
     color2: "#38C8E6",
   },
-  container_BgColor: "#FFFFFF",
+  container_BgColor: "rgba(255, 255, 255, 0.75)",
   container_TitleColor: "#727E8E",
   forecastPanelBgColor: "rgba(255, 255, 255, 0.75)",
   searchInput: {

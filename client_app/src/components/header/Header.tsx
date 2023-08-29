@@ -1,22 +1,23 @@
-import {
-  HeaderContainer,
-  HeaderTitle,
-  HeaderIconsContainer,
-  GithubLink,
-} from "./styled";
-import { FaGithub } from "react-icons/fa";
+import { observer } from "mobx-react-lite";
+import { useStore } from "../../store/store";
+import PlaceSearch from "../inputs/PlaceSearch";
+import { HeaderContainer, HeaderTitle } from "./styled";
 
 const Header = () => {
+  const {
+    weatherStore: { clearStore },
+  }: any = useStore();
+
+  const handleResetAll = () => {
+    clearStore();
+  };
+
   return (
     <HeaderContainer>
-      <HeaderTitle>SkySync Weather</HeaderTitle>
-      <HeaderIconsContainer>
-        <GithubLink href="https://github.com/korkh/SkySync-Weather">
-          <FaGithub style={{ fontSize: 24 }} />
-        </GithubLink>
-      </HeaderIconsContainer>
+      <HeaderTitle onClick={handleResetAll} />
+      <PlaceSearch />
     </HeaderContainer>
   );
 };
 
-export default Header;
+export default observer(Header);

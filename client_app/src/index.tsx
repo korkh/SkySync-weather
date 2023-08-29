@@ -3,6 +3,7 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./router/Routes";
 import "react-toastify/dist/ReactToastify.min.css";
 import "semantic-ui-css/semantic.min.css";
+import "react-tooltip/dist/react-tooltip.css";
 import { StoreContext, store } from "./store/store";
 
 const root = ReactDOM.createRoot(
