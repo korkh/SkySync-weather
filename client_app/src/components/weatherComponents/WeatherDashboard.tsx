@@ -67,7 +67,9 @@ const WeatherDashboard: React.FC = () => {
 
   return (
     <>
-      {mainWeatherData.cod === 200 && dailyWeatherData.cod === "200" ? (
+      {mainWeatherData.cod === 200 &&
+      dailyWeatherData.cod === "200" &&
+      !isLoading ? (
         <>
           <WeatherContainer>
             <div style={{ display: "flex", justifyContent: "space-between" }}>

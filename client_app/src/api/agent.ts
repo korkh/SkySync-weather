@@ -149,7 +149,7 @@ const DailyWeather = {
       const response: AxiosResponse = await ax.get(
         `${mainURL}/forecast?q=${place}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`
       );
-      await new Promise((resolve) => setTimeout(resolve, 2000));
+      // await new Promise((resolve) => setTimeout(resolve, 2000));
       Services.setDailyWeather(response.data);
       return response.data;
     } catch (error) {
