@@ -1,19 +1,25 @@
-import { useEffect, useRef, useState } from "react";
-import { LocationButton, SearchElement, SearchResult } from "./styled";
+import React, { useEffect, useRef, useState } from "react";
+import {
+  LocationButton,
+  SearchElement,
+  SearchResult,
+  SuggestionItem,
+} from "./styled";
 import useOutsideClick from "../../hooks/useOutsideClick";
-import SearchSuggestion from "../inputs/SearchSuggestions";
 import { toast } from "react-toastify";
 import { useStore } from "../../store/store";
 import DebounceInput from "./DebounceInput";
 import { observer } from "mobx-react-lite";
 import { Icon } from "semantic-ui-react";
+
 const PlaceSearch = () => {
   const suggestionRef = useRef(null);
+  const inputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const {
-    weatherStore: { getWeatherByPlace, getWeatherByPosition, getPlace },
+    weatherStore: { getWeatherByPosition, getPlace, getWeatherByPlace },
   } = useStore();
 
   const handleInputChange = async (value: string) => {
@@ -29,23 +35,32 @@ const PlaceSearch = () => {
     }
   };
 
-  const handleWeatherForecastByPlace = async (place: string) => {
-    try {
-      await getWeatherByPlace(place).then((res) => {
-        console.log("response inside plcaesearch", res);
-      });
-    } catch (error) {
-      console.error("Error fetching cities:", error);
-      toast.error("Error fetching cities");
-    }
-  };
-
   const getWeatherByPsn = async () => {
     try {
       await getWeatherByPosition();
     } catch (error) {
       console.error("Error fetching cities:", error);
       toast.error("Error fetching cities");
+    }
+  };
+
+  const handleSelectSuggestion = async (place: string) => {
+    try {
+      await getWeatherByPlace(place);
+      setShowSuggestions(false);
+    } catch (error) {
+      console.error("Error occurred when fetching weather:", error);
+      toast.error("Error occurred when fetching weather");
+    }
+  };
+
+  const handleInputKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      if (inputValue.trim() !== "") {
+        setShowSuggestions(false);
+
+        handleSelectSuggestion(inputValue);
+      }
     }
   };
 
@@ -64,9 +79,11 @@ const PlaceSearch = () => {
     <SearchElement>
       <Icon name="search" size="large" color="teal" />
       <DebounceInput
+        ref={inputRef}
         value={inputValue}
         delay={300}
         onChange={handleInputChange}
+        onKeyPress={handleInputKeyPress}
         placeholder="Search for location here.."
       />
       <LocationButton onClick={getWeatherByPsn}>
@@ -75,14 +92,12 @@ const PlaceSearch = () => {
       {showSuggestions && (
         <SearchResult ref={suggestionRef}>
           {suggestions?.slice(0, 6)?.map((suggestion, index) => (
-            <SearchSuggestion
+            <SuggestionItem
               key={index}
-              label={suggestion}
-              hide={() => {
-                setShowSuggestions(false);
-                handleWeatherForecastByPlace(suggestion);
-              }}
-            />
+              onClick={() => handleSelectSuggestion(suggestion)}
+            >
+              {suggestion}
+            </SuggestionItem>
           ))}
         </SearchResult>
       )}

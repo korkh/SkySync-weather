@@ -79,7 +79,7 @@ const ForecastMainBoard = ({
         <div>
           <WeatherIcon
             iconCode={icon}
-            style={{ filter: "brightness(0.6)" }}
+            style={{ filter: "brightness(0.8)" }}
             size="tinyL"
           />
           <p>{description}</p>

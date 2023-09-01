@@ -30,7 +30,7 @@ ax.interceptors.response.use(
         break;
       case 404:
         toast.error("not found");
-        router.navigate("/not-found");
+        router.navigate("/");
         break;
       case 500:
         router.navigate("/server-error");

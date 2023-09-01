@@ -61,7 +61,9 @@ const WeatherDashboard: React.FC = () => {
       setActiveDate(currentDateObj);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [weatherDaily, weatherData, currentDate]);
+  }, [weatherDaily, weatherData, currentDate, mainWeatherData.cod]);
+
+  console.log(dailyWeatherData.cod);
 
   return (
     <>
@@ -99,7 +101,7 @@ const WeatherDashboard: React.FC = () => {
                   >
                     <WeatherIcon
                       iconCode={mainWeatherData.weather[0].icon}
-                      style={{ filter: "brightness(0.7)" }}
+                      style={{ filter: "brightness(0.8)" }}
                       size="small"
                     />
                     <span>

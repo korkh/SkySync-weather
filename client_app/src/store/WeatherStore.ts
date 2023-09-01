@@ -3,8 +3,8 @@ import agent from "../api/agent";
 import { CurrentDate } from "../interfaces/CurrentDate";
 
 export type WeatherState = {
-  weatherData: [];
-  weatherDaily: [];
+  weatherData: any[];
+  weatherDaily: any[];
   location: string | { lat: number; lon: number };
   isError: boolean;
   currentDate: CurrentDate;
@@ -36,8 +36,19 @@ export default class WeatherStore {
   getPlace = async (searchTerm: string) => {
     try {
       const locations = await agent.Locations.getPlace(searchTerm);
-      this.weatherState.location = locations;
+      runInAction(() => {
+        this.weatherState.location = locations;
+      });
       return locations;
+    } catch (error) {
+      this.weatherState.isError = true;
+    }
+  };
+
+  setPlace = (place: string) => {
+    try {
+      console.log("Place in store", place);
+      this.weatherState.location = place;
     } catch (error) {
       this.weatherState.isError = true;
     }
@@ -46,9 +57,10 @@ export default class WeatherStore {
   fetchWeatherByPlace = async (searchTerm: string) => {
     this.setIsLoading(true);
     try {
-      const location = await this.getPlace(searchTerm);
-      const response: any = await agent.Weather.getByPlace(location);
+      // const location = await this.getPlace(searchTerm);
+      const response: any = await agent.Weather.getByPlace(searchTerm);
       runInAction(() => {
+        this.setPlace(searchTerm);
         this.weatherState.weatherData = response;
         agent.Services.setWeather(response);
         this.setIsLoading(false);
@@ -65,27 +77,28 @@ export default class WeatherStore {
     this.setIsLoading(true);
     try {
       const response: any = await agent.Weather.getByPosition();
+
       runInAction(() => {
         this.weatherState.weatherData = response;
         agent.Services.setWeather(response);
-        this.setIsLoading(false);
       });
+      this.setIsLoading(false);
       return response;
     } catch (error) {
       runInAction(() => {
         console.log(error);
         this.weatherState.isError = true;
-        this.setIsLoading(false);
       });
+      this.setIsLoading(false);
     }
   };
 
   fetchDailyWeatherByPlace = async (searchTerm: string) => {
     this.setIsLoading(true);
     try {
-      const location = await this.getPlace(searchTerm);
-      const response: any = await agent.DailyWeather.getByPlace(location);
+      const response: any = await agent.DailyWeather.getByPlace(searchTerm!);
       runInAction(() => {
+        this.weatherState.location = searchTerm;
         this.weatherState.weatherData = response;
         agent.Services.setDailyWeather(response);
         this.setIsLoading(false);
@@ -123,9 +136,10 @@ export default class WeatherStore {
   getWeatherByPlace = async (searchTerm: string) => {
     this.setIsLoading(true);
     try {
-      runInAction(() => {
-        this.fetchWeatherByPlace(searchTerm);
-        this.fetchDailyWeatherByPlace(searchTerm);
+      runInAction(async () => {
+        await this.fetchWeatherByPlace(searchTerm);
+        await this.fetchDailyWeatherByPlace(searchTerm);
+        this.setIsLoading(false);
       });
     } catch (error) {
       runInAction(() => {
@@ -139,9 +153,10 @@ export default class WeatherStore {
   getWeatherByPosition = async () => {
     this.setIsLoading(true);
     try {
-      runInAction(() => {
-        this.fetchWeatherByPosition();
-        this.fetchDailyWeatherByPosition();
+      runInAction(async () => {
+        await this.fetchWeatherByPosition();
+        await this.fetchDailyWeatherByPosition();
+        this.setIsLoading(false);
       });
     } catch (error) {
       runInAction(() => {
