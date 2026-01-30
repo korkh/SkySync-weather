@@ -6,7 +6,7 @@ import { observer } from "mobx-react-lite";
 const Home = () => {
   return (
     <>
-      <Header />
+      <Header />      
       <WeatherDashboard />
       <Footer />
     </>

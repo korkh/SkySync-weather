@@ -56,15 +56,15 @@ const WeatherDashboard: React.FC = () => {
     } else {
       setMainWeatherData(weatherData);
       setDailyWeatherData(weatherDaily);
-      if (!mainWeatherData.dt) return;
-      const currentDateObj = getCurrentDate(mainWeatherData.dt);
+      if (!mainWeatherData) return;
+      const currentDateObj = getCurrentDate(mainWeatherData);
       setActiveDate(currentDateObj);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [weatherDaily, weatherData, currentDate, mainWeatherData.cod]);
 
-  console.log(dailyWeatherData.cod);
-
+  
+  
   return (
     <>
       {mainWeatherData.cod === 200 &&

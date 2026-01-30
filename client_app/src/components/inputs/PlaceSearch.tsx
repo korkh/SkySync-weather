@@ -5,12 +5,13 @@ import {
   SearchResult,
   SuggestionItem,
 } from "./styled";
-import useOutsideClick from "../../hooks/useOutsideClick";
 import { toast } from "react-toastify";
 import { useStore } from "../../store/store";
 import DebounceInput from "./DebounceInput";
 import { observer } from "mobx-react-lite";
 import { Icon } from "semantic-ui-react";
+import { router } from "../../router/Routes";
+import useOutsideClick from "../../hooks/useOutsideClick";
 
 const PlaceSearch = () => {
   const suggestionRef = useRef(null);
@@ -23,21 +24,21 @@ const PlaceSearch = () => {
   } = useStore();
 
   const handleInputChange = async (value: string) => {
-    setInputValue(value);
-
-    try {
-      await getPlace(inputValue).then((res) => {
-        setSuggestions(res);
-      });
+    
+    if (value.length > 2) { 
+      try {
+       setInputValue(value); 
     } catch (error) {
       console.error("Error fetching suggestions:", error);
       toast.error("Error fetching suggestions");
+    }
     }
   };
 
   const getWeatherByPsn = async () => {
     try {
       await getWeatherByPosition();
+      router.navigate("/dashboard");
     } catch (error) {
       console.error("Error fetching cities:", error);
       toast.error("Error fetching cities");
@@ -48,6 +49,7 @@ const PlaceSearch = () => {
     try {
       await getWeatherByPlace(place);
       setShowSuggestions(false);
+      router.navigate("/dashboard");
     } catch (error) {
       console.error("Error occurred when fetching weather:", error);
       toast.error("Error occurred when fetching weather");
@@ -74,6 +76,17 @@ const PlaceSearch = () => {
     element: suggestionRef,
     callBack: () => setShowSuggestions(false),
   });
+
+  useEffect(() => {
+  if (inputValue.length > 2) { // Ищем только если больше 2 символов
+    getPlace(inputValue).then((res) => {
+      setSuggestions(res);
+      setShowSuggestions(true);
+    });
+  } else {
+    setShowSuggestions(false);
+  }
+}, [inputValue, getPlace]);
 
   return (
     <SearchElement>

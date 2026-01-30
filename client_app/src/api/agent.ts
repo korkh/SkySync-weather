@@ -10,8 +10,9 @@ const sleep = (delay: number) => {
   });
 };
 
-const mainURL = process.env.REACT_APP_API_URL;
+const mainURL = process.env.REACT_APP_API_URL; 
 const cityURL = process.env.REACT_APP_API_CITY_URL;
+const apiKey = process.env.REACT_APP_API_KEY;
 
 const ax: AxiosInstance = axios.create();
 
@@ -54,18 +55,17 @@ const Locations = {
         `${cityURL}?${search.toString()}`
       );
 
-      const filteredData = response.data
-        .filter((item: any) => item.addresstype === "city")
-        .map((item: any) => {
-          const city = item.display_name.split(",")[0];
-          const countryIndex = item.display_name.split(",").length - 1;
-          const country = item.display_name.split(",")[countryIndex].trim();
-          return `${city}, ${country}`;
-        });
+      const filteredData = response.data.map((item: any) => {
+        const parts = item.display_name.split(",");
+        const city = parts[0];
+        const country = parts[parts.length - 1].trim();
+        return `${city}, ${country}`;
+      });
+      
       return filteredData;
     } catch (error) {
       console.error("Error fetching locations:", error);
-      toast.error("An error occured when tried to get location");
+      toast.error("An error occurred when tried to get location");
     }
   },
   getPosition: async () => {
@@ -94,14 +94,15 @@ const Locations = {
 const Weather = {
   getByPosition: async () => {
     try {
-      agent.Services.clearStore(); //if want to refresh
+      agent.Services.clearStore();
       const psn: { lat: number; lon: number } = await Locations.getPosition();
 
       Services.setLocationToStore(psn);
       const response: AxiosResponse = await ax.get(
-        `${mainURL}/weather?lat=${psn.lat}&lon=${psn.lon}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+        `${mainURL}/weather?lat=${psn.lat}&lon=${psn.lon}&units=metric&appid=${apiKey}`
       );
       Services.setWeather(response.data);
+      
       return response.data;
     } catch (error) {
       console.error("Error fetching weather by position: ", error);
@@ -111,10 +112,10 @@ const Weather = {
   },
   getByPlace: async (place: string) => {
     try {
-      agent.Services.clearStore(); //if choosing other location
+      agent.Services.clearStore(); 
       Services.setLocationToStore(place);
       const response: AxiosResponse = await ax.get(
-        `${mainURL}/weather?q=${place}&units=metric&appid=${process.env.REACT_APP_API_KEY}`
+        `${mainURL}/weather?q=${place}&units=metric&appid=${apiKey}`
       );
       Services.setWeather(response.data);
       return response.data;
@@ -129,12 +130,11 @@ const Weather = {
 const DailyWeather = {
   getByPosition: async () => {
     try {
-      agent.Services.clearStore(); //if want to refresh
       const psn: { lat: number; lon: number } = await Locations.getPosition();
 
       Services.setLocationToStore(psn);
       const response: AxiosResponse = await ax.get(
-        `${mainURL}/forecast?lat=${psn.lat}&lon=${psn.lon}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`
+        `${mainURL}/forecast?lat=${psn.lat}&lon=${psn.lon}&units=metric&APPID=${apiKey}`
       );
       Services.setDailyWeather(response.data);
       return response.data;
@@ -147,7 +147,7 @@ const DailyWeather = {
   getByPlace: async (place: string) => {
     try {
       const response: AxiosResponse = await ax.get(
-        `${mainURL}/forecast?q=${place}&units=metric&APPID=${process.env.REACT_APP_API_KEY}`
+        `${mainURL}/forecast?q=${place}&units=metric&APPID=${apiKey}`
       );
       // await new Promise((resolve) => setTimeout(resolve, 2000));
       Services.setDailyWeather(response.data);
@@ -174,34 +174,22 @@ const Services = {
     }
   },
   setWeather: (data: any) => {
-    if (localStorage.getItem("weather") === null) {
-      let storedData = JSON.stringify(data);
-      localStorage.setItem("weather", storedData);
-    }
-  },
-  setDailyWeather: (data: any) => {
-    if (localStorage.getItem("dailyWeather") === null) {
-      let storedData = JSON.stringify(data);
-      localStorage.setItem("dailyWeather", storedData);
-    }
-  },
+    localStorage.setItem("weather", JSON.stringify(data));
+},
+setDailyWeather: (data: any) => {
+    localStorage.setItem("dailyWeather", JSON.stringify(data));
+},
   getLocationFromStore: (): any => {
     let storedData = localStorage.getItem("location") || JSON.stringify([]);
     if (storedData) {
       return JSON.parse(storedData);
     }
   },
-  setLocationToStore: (data: any) => {
-    if (localStorage.getItem("location") === null || "") {
-      let storedData = JSON.stringify(data);
-      localStorage.setItem("location", storedData);
-    }
+ setLocationToStore: (data: any) => {
+    localStorage.setItem("location", JSON.stringify(data));
   },
   setCurrentDateToStore: (data: CurrentDate) => {
-    if (localStorage.getItem("currentDate") === null || "") {
-      let storedData = JSON.stringify(data);
-      localStorage.setItem("currentDate", storedData);
-    }
+    localStorage.setItem("currentDate", JSON.stringify(data));
   },
   getCurrentDateFromStore: (key: string): any => {
     let storedData = localStorage.getItem("currentDate");

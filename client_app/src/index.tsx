@@ -1,7 +1,7 @@
 import ReactDOM from "react-dom/client";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./router/Routes";
-import "react-toastify/dist/ReactToastify.min.css";
+import 'react-toastify/dist/ReactToastify.css';
 import "semantic-ui-css/semantic.min.css";
 import "react-tooltip/dist/react-tooltip.css";
 import { StoreContext, store } from "./store/store";

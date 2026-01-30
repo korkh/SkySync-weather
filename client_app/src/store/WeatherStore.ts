@@ -2,6 +2,7 @@ import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { CurrentDate } from "../interfaces/CurrentDate";
 
+
 export type WeatherState = {
   weatherData: any[];
   weatherDaily: any[];
@@ -76,13 +77,14 @@ export default class WeatherStore {
   fetchWeatherByPosition = async () => {
     this.setIsLoading(true);
     try {
-      const response: any = await agent.Weather.getByPosition();
+      const response: any = await agent.Weather.getByPosition();     
 
       runInAction(() => {
         this.weatherState.weatherData = response;
         agent.Services.setWeather(response);
+        this.setIsLoading(false);
       });
-      this.setIsLoading(false);
+      
       return response;
     } catch (error) {
       runInAction(() => {
@@ -94,18 +96,17 @@ export default class WeatherStore {
   };
 
   fetchDailyWeatherByPlace = async (searchTerm: string) => {
-    this.setIsLoading(true);
-    try {
-      const response: any = await agent.DailyWeather.getByPlace(searchTerm!);
-      runInAction(() => {
-        this.weatherState.location = searchTerm;
-        this.weatherState.weatherData = response;
-        agent.Services.setDailyWeather(response);
-        this.setIsLoading(false);
-      });
-
-      return response;
-    } catch (error) {
+  this.setIsLoading(true);
+  try {
+    const response: any = await agent.DailyWeather.getByPlace(searchTerm!);
+    runInAction(() => {
+      this.weatherState.location = searchTerm;
+      this.weatherState.weatherDaily = response; 
+      agent.Services.setDailyWeather(response);
+      this.setIsLoading(false);
+    });
+    return response;
+  } catch (error) {
       runInAction(() => {
         console.log(error);
         this.weatherState.isError = true;
@@ -120,7 +121,10 @@ export default class WeatherStore {
       const response: any = await agent.DailyWeather.getByPosition();
 
       runInAction(() => {
-        this.weatherState.weatherDaily = response;
+        // const transformed = agent.Services.dataTransformation(response);
+        // this.weatherState.weatherDaily = transformed; 
+        this.weatherState.weatherDaily = response; 
+      agent.Services.setDailyWeather(response);
         this.setIsLoading(false);
       });
       return response;
@@ -150,7 +154,7 @@ export default class WeatherStore {
     }
   };
 
-  getWeatherByPosition = async () => {
+getWeatherByPosition = async () => {
     this.setIsLoading(true);
     try {
       runInAction(async () => {
@@ -171,7 +175,6 @@ export default class WeatherStore {
     this.setIsLoading(true);
     try {
       const currentDateObj = agent.Services.getDate(date);
-      console.log("current date object in store", currentDateObj);
       runInAction(() => {
         this.weatherState.currentDate = currentDateObj;
         this.setIsLoading(false);

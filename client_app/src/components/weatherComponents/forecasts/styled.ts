@@ -11,7 +11,7 @@ export const ForecastContainer = styled.div`
 export const SectionTitle = styled.h6`
   font-weight: 500;
   font-size: 1.5rem;
-  color: ${({ theme }) => theme.panelTitleColor};
+  color: ${({ theme }:any) => theme.panelTitleColor};
 `;
 export const ForecastItems = styled.div`
   display: block;

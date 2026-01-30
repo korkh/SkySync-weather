@@ -14,7 +14,7 @@ export const HeaderContainer = styled.header`
   }
 `;
 export const HeaderTitle = styled.div`
-  color: ${({ theme }) => theme.appTitleColor};
+  color: ${({ theme }:any) => theme.appTitleColor};
   font-size: 2.2rem;
   text-align: center;
   align-items: center;

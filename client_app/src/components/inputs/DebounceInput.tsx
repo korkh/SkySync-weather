@@ -12,18 +12,16 @@ interface Props {
 }
 
 const DebounceInput = forwardRef<HTMLInputElement, Props>(
-  ({ value, onChange, delay, placeholder, onKeyPress }: Props, ref) => {
-    const [internalValue, setInternalValue] = useState<string>(value);
+  (Props, ref) => {
+    const [internalValue, setInternalValue] = useState<string>(Props.value);
 
     useEffect(() => {
-      const timer = setTimeout(() => {
-        onChange(internalValue);
-      }, delay);
+  const timer = setTimeout(() => {
+    Props.onChange(internalValue);
+  }, Props.delay || 500);
 
-      return () => {
-        clearTimeout(timer);
-      };
-    }, [internalValue, onChange, delay]);
+  return () => clearTimeout(timer);
+}, [internalValue, Props]);
 
     const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
       setInternalValue(event.target.value);
@@ -35,8 +33,8 @@ const DebounceInput = forwardRef<HTMLInputElement, Props>(
         type="text"
         value={internalValue}
         onChange={handleInputChange}
-        onKeyPress={onKeyPress}
-        placeholder={placeholder}
+        onKeyUp={Props.onKeyPress}
+        placeholder={Props.placeholder}
       />
     );
   }
